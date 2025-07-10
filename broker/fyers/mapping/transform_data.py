@@ -1,11 +1,11 @@
-#Mapping OpenAlgo API Request https://openalgo.in/docs
+#Mapping aasanalgo API Request https://aasanalgo.in/docs
 #Mapping Zerodha Broking Parameters https://kite.trade/docs/connect/v3/
 
 from database.token_db import get_br_symbol
 
 def transform_data(data):
     """
-    Transforms the OpenAlgo Platform API request structure to the format expected by the Fyers API.
+    Transforms the aasanalgo Platform API request structure to the format expected by the Fyers API.
     """
     # Assuming get_br_symbol, map_order_type, map_action, and map_product_type are defined elsewhere correctly.
     symbol = get_br_symbol(data['symbol'], data['exchange'])
@@ -30,7 +30,7 @@ def transform_data(data):
         "offlineOrder": False,
         "stopLoss": 0,
         "takeProfit": 0,
-        "orderTag": "openalgo",
+        "orderTag": "aasanalgo",
     }
 
     return transformed
@@ -87,9 +87,9 @@ def map_product_type(product):
 
 def reverse_map_product_type(exchange,product):
     """
-    Reverse maps the broker product type to the OpenAlgo product type, considering the exchange.
+    Reverse maps the broker product type to the aasanalgo product type, considering the exchange.
     """
-    # Exchange to OpenAlgo product type mapping for 'D'
+    # Exchange to aasanalgo product type mapping for 'D'
     exchange_mapping = {
         "CNC": "CNC",
         "NRML": "NRML",

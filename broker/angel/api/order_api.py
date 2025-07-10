@@ -52,7 +52,7 @@ def get_holdings(auth):
     return get_api_response("/rest/secure/angelbroking/portfolio/v1/getAllHolding",auth)
 
 def get_open_position(tradingsymbol, exchange, producttype,auth):
-    #Convert Trading Symbol from OpenAlgo Format to Broker Format Before Search in OpenPosition
+    #Convert Trading Symbol from aasanalgo Format to Broker Format Before Search in OpenPosition
     tradingsymbol = get_br_symbol(tradingsymbol,exchange)
     positions_data = get_positions(auth)
 
@@ -236,7 +236,7 @@ def close_all_positions(current_api_key,auth):
             quantity = abs(int(position['netqty']))
 
 
-            #get openalgo symbol to send to placeorder function
+            #get aasanalgo symbol to send to placeorder function
             symbol = get_symbol(position['symboltoken'],position['exchange'])
             print(f'The Symbol is {symbol}')
 

@@ -720,7 +720,7 @@ class BrokerData:
                 }
                 
                 # Create the DataFrame with timestamp as a column (not an index)
-                # NOTE: For OpenAlgoXTS, return non-indexed DataFrame with timestamp as a column
+                # NOTE: For aasanalgoXTS, return non-indexed DataFrame with timestamp as a column
                 # This matches the FivePaisa pattern that has been proven to work correctly
                 result_df = pd.DataFrame(data)
                 
@@ -758,7 +758,7 @@ class BrokerData:
 
     def get_intervals(self) -> Dict[str, Dict[str, List[str]]]:
         """
-        Get supported timeframes for Groww historical data in the OpenAlgo format.
+        Get supported timeframes for Groww historical data in the aasanalgo format.
         
         Note that Groww has time-based constraints on minimum interval size:
         - 0-3 days: 1 min minimum
@@ -783,7 +783,7 @@ class BrokerData:
             "months": []  # Groww doesn't support month-level data
         }
         
-        # Return in the standard OpenAlgo format
+        # Return in the standard aasanalgo format
         return {
             "status": "success",
             "data": intervals
@@ -860,7 +860,7 @@ class BrokerData:
             timeout (int): Timeout in seconds
             
         Returns:
-            Dict[str, Any]: Quote data in OpenAlgo format
+            Dict[str, Any]: Quote data in aasanalgo format
         """
         logger.info(f"Getting quotes using direct API calls for: {symbol_list}")
         
@@ -922,7 +922,7 @@ class BrokerData:
                 # Get token for this symbol
                 token = get_token(symbol, exchange)
                 
-                # Map OpenAlgo exchange to Groww exchange format
+                # Map aasanalgo exchange to Groww exchange format
                 if exchange == 'NSE':
                     groww_exchange = EXCHANGE_NSE
                     segment = SEGMENT_CASH
@@ -1027,13 +1027,13 @@ class BrokerData:
                                 
                             logger.info(f"Processed OHLC data: {ohlc}")
                             
-                            # Create quote_item in OpenAlgo format
+                            # Create quote_item in aasanalgo format
                             # Print each field being extracted for debugging
                             print(f"last_price: {response.get('last_price')}")
                             print(f"ohlc: {ohlc}")
                             print(f"volume: {response.get('volume')}")
                             
-                            # CRITICAL: Build the quote item directly with values extracted from the response, using field names that OpenAlgo understands
+                            # CRITICAL: Build the quote item directly with values extracted from the response, using field names that aasanalgo understands
                             # The quote_item should use the frontend-compatible field names
                             last_price = safe_float(response.get('last_price'))
                             print(f"EXTRACTED last_price = {last_price}")
@@ -1177,7 +1177,7 @@ class BrokerData:
                 "message": "No data retrieved"
             }
         
-        # Single symbol case - return in simpler format for OpenAlgo frontend
+        # Single symbol case - return in simpler format for aasanalgo frontend
         if isinstance(symbol_list, (str, dict)) or len(symbol_list) == 1:
             logger.info(f"Returning data for single symbol")
     
@@ -1196,7 +1196,7 @@ class BrokerData:
             "data": quote_data
         }
     def _format_single_quote_response(self, quote_data):
-        """Helper method to convert from standard dict to the format expected by OpenAlgo frontend
+        """Helper method to convert from standard dict to the format expected by aasanalgo frontend
         
         Returns only the data portion without status wrapper - status added by the caller
         """
@@ -1219,7 +1219,7 @@ class BrokerData:
             "ask": quote.get("ask_price", 0)
         }
 
-        logger.debug(f"Final OpenAlgo quote format (data only): {result}")
+        logger.debug(f"Final aasanalgo quote format (data only): {result}")
         return result
 
     # Commented out alternate implementation
@@ -1236,9 +1236,9 @@ class BrokerData:
     #    quote = quote_data[0] if isinstance(quote_data, list) and len(quote_data) > 0 else {}
         
         print(f"EXTRACTED QUOTE: {quote}")
-        logger.info(f"Formatting single quote response for OpenAlgo frontend: {quote}")
+        logger.info(f"Formatting single quote response for aasanalgo frontend: {quote}")
         
-        # Based on the sample response, OpenAlgo expects exactly these fields
+        # Based on the sample response, aasanalgo expects exactly these fields
         # Keep this extremely simple - just the required fields
         simple_data = {
             "ltp": 0,
@@ -1254,7 +1254,7 @@ class BrokerData:
         
         # Now grab values from our quote data, using the field that matches best
         
-        # LTP - preferred field name in OpenAlgo
+        # LTP - preferred field name in aasanalgo
         if "ltp" in quote and quote["ltp"] is not None:
             simple_data["ltp"] = float(quote["ltp"])
         elif "last_price" in quote and quote["last_price"] is not None:
@@ -1301,14 +1301,14 @@ class BrokerData:
         for key, value in simple_data.items():
             print(f"{key}: {value}")
         
-        # Return exact structure expected by OpenAlgo
+        # Return exact structure expected by aasanalgo
         result = {
             "status": "success",
             "data": simple_data
         }
         
         print(f"FINAL FORMATTED RESULT: {result}")
-        logger.info(f"Formatted result for OpenAlgo frontend: {result}")
+        logger.info(f"Formatted result for aasanalgo frontend: {result}")
         
         return result
         
@@ -1322,7 +1322,7 @@ class BrokerData:
             timeout (int): Timeout in seconds
             
         Returns:
-            Dict[str, Any]: Market depth data in OpenAlgo format
+            Dict[str, Any]: Market depth data in aasanalgo format
         """
         logger.info(f"Getting market depth using direct API calls for: {symbol_list}")
         
@@ -1362,7 +1362,7 @@ class BrokerData:
         # Get token for this symbol
         token = get_token(symbol, exchange)
         
-        # Map OpenAlgo exchange to Groww exchange format
+        # Map aasanalgo exchange to Groww exchange format
         if exchange == 'NSE':
             groww_exchange = EXCHANGE_NSE
             segment = SEGMENT_CASH
@@ -1415,7 +1415,7 @@ class BrokerData:
             payload = response['payload']
             logger.info(f"Extracted payload with keys: {list(payload.keys())[:10]}")
             
-            # Create a properly formatted response for OpenAlgo
+            # Create a properly formatted response for aasanalgo
             depth_response = {}
             
             # Safely convert values to float/int, handling None values
@@ -1493,7 +1493,7 @@ class BrokerData:
             total_buy_qty = safe_int(payload.get('total_buy_quantity', 0))
             total_sell_qty = safe_int(payload.get('total_sell_quantity', 0))
             
-            # Format the depth response according to OpenAlgo requirements
+            # Format the depth response according to aasanalgo requirements
             depth_response = {
                 'bids': bids,
                 'asks': asks,
@@ -1525,6 +1525,6 @@ class BrokerData:
             timeout (int): Timeout in seconds
             
         Returns:
-            Dict[str, Any]: Market depth data in OpenAlgo format
+            Dict[str, Any]: Market depth data in aasanalgo format
         """
         return self.get_depth(symbol_list, timeout)

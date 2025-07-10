@@ -26,7 +26,7 @@ def get_encryption_key():
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,
-        salt=b'openalgo_static_salt',
+        salt=b'aasanalgo_static_salt',
         iterations=100000,
     )
     key = base64.urlsafe_b64encode(kdf.derive(PEPPER.encode()))
@@ -66,7 +66,7 @@ class Auth(Base):
 class ApiKeys(Base):
     __tablename__ = 'api_keys'
     id = Column(Integer, primary_key=True)
-    user_id = Column(String, nullable=False, unique=True)
+    user_id = Column(String(64), nullable=False, unique=True)
     api_key_hash = Column(Text, nullable=False)  # For verification
     api_key_encrypted = Column(Text, nullable=False)  # For retrieval
     created_at = Column(DateTime(timezone=True), default=func.now())

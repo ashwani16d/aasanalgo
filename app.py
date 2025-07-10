@@ -1,9 +1,11 @@
 # Load and check environment variables before anything else
+import dbm
 from utils.env_check import load_and_check_env_variables  # Import the environment check function
 load_and_check_env_variables()
 
 from flask import Flask, render_template
 from extensions import socketio  # Import SocketIO
+from extensions import db
 from limiter import limiter  # Import the Limiter instance
 from cors import cors        # Import the CORS instance
 from csp import apply_csp_middleware  # Import the CSP middleware
@@ -39,6 +41,7 @@ from database.chartink_db import init_db as ensure_chartink_tables_exists
 from database.traffic_db import init_logs_db as ensure_traffic_logs_exists
 from database.latency_db import init_latency_db as ensure_latency_tables_exists
 from database.strategy_db import init_db as ensure_strategy_tables_exists
+from database.trade import Trade
 
 from utils.plugin_loader import load_broker_auth_functions
 
@@ -108,14 +111,23 @@ def create_app():
     @app.context_processor
     def inject_version():
         return dict(version=get_version())
+    
+    from database.admin_api import admin_api
+    app.register_blueprint(admin_api, url_prefix="/admin")
+
+    db.init_app(app)
+
 
     return app
 
 def setup_environment(app):
+
+    
     with app.app_context():
         #load broker plugins
         app.broker_auth_functions = load_broker_auth_functions()
         # Ensure all the tables exist
+        db.create_all()
         ensure_auth_tables_exists()
         ensure_user_tables_exists()
         ensure_master_contract_tables_exists()
@@ -134,6 +146,10 @@ def setup_environment(app):
         print(" * ngrok URL: " + public_url + " *")
 
 app = create_app()
+
+
+from blueprints.admin import admin_bp  # 👈 if saved as blueprints/admin.py
+app.register_blueprint(admin_bp)
 
 # Explicitly call the setup environment function
 setup_environment(app)

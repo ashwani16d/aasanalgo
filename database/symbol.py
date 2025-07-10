@@ -1,5 +1,15 @@
 import os
-from sqlalchemy import create_engine, Column, Integer, String, Float, Sequence, Index, or_, and_
+from sqlalchemy import (
+    Column,
+    Integer,
+    String,
+    Float,
+    Sequence,
+    Index,
+    and_,
+    or_,
+    create_engine
+)
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from typing import List
@@ -13,16 +23,16 @@ Base.query = db_session.query_property()
 class SymToken(Base):
     __tablename__ = 'symtoken'
     id = Column(Integer, Sequence('symtoken_id_seq'), primary_key=True)
-    symbol = Column(String, nullable=False, index=True)
-    brsymbol = Column(String, nullable=False, index=True)
-    name = Column(String)
-    exchange = Column(String, index=True)
-    brexchange = Column(String, index=True)
-    token = Column(String, index=True)
-    expiry = Column(String)
+    symbol = Column(String(50), nullable=False, index=True)
+    brsymbol = Column(String(50), nullable=False, index=True)
+    name = Column(String(50))
+    exchange = Column(String(50), index=True)
+    brexchange = Column(String(50), index=True)
+    token = Column(String(50), index=True)
+    expiry = Column(String(50))
     strike = Column(Float)
     lotsize = Column(Integer)
-    instrumenttype = Column(String)
+    instrumenttype = Column(String(50))
     tick_size = Column(Float)
 
     # Composite indices for improved search performance
@@ -38,7 +48,7 @@ def enhanced_search_symbols(query: str, exchange: str = None) -> List[SymToken]:
     and supports partial matching with multiple terms
     
     Args:
-        query (str): Search query string
+        query (str): Search query String(50)
         exchange (str, optional): Exchange to filter by
         
     Returns:

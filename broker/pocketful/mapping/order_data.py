@@ -48,9 +48,9 @@ def map_order_data(order_data):
             print(f"Warning: Order missing symbol fields (tried 'trading_symbol' and 'tradingsymbol'): {order}")
             continue
         
-        # Check if symbol was found; if so, update with OpenAlgo format
+        # Check if symbol was found; if so, update with aasanalgo format
         if symbol:
-            # Convert to OpenAlgo symbol format
+            # Convert to aasanalgo symbol format
             oa_symbol = get_oa_symbol(symbol=symbol, exchange=exchange)
             order['tradingsymbol'] = oa_symbol
             # Also update trading_symbol if it exists to maintain consistency
@@ -140,7 +140,7 @@ def calculate_order_statistics(order_data):
 
 def transform_order_data(orders):
     """
-    Transform order data from Pocketful API format to OpenAlgo standard format.
+    Transform order data from Pocketful API format to aasanalgo standard format.
     Handles both completed and pending orders from the combined order book.
     
     Args:
@@ -280,7 +280,7 @@ def map_trade_data(trade_data):
             # Add 'tradingsymbol' field for consistency with rest of the system
             processed_trade['tradingsymbol'] = symbol
             
-            # Convert to OpenAlgo symbol format if exchange is available
+            # Convert to aasanalgo symbol format if exchange is available
             if exchange:
                 oa_symbol = get_oa_symbol(symbol=symbol, exchange=exchange)
                 processed_trade['tradingsymbol'] = oa_symbol
@@ -312,7 +312,7 @@ def map_trade_data(trade_data):
 
 def transform_tradebook_data(tradebook_data):
     """
-    Transform tradebook data from Pocketful API format to OpenAlgo standard format.
+    Transform tradebook data from Pocketful API format to aasanalgo standard format.
     
     Args:
         tradebook_data: Response from Pocketful's trade book API
@@ -415,7 +415,7 @@ def map_position_data(position_data):
             # Add 'tradingsymbol' field for consistency with rest of the system
             processed_position['tradingsymbol'] = symbol
             
-            # Convert to OpenAlgo symbol format if exchange is available
+            # Convert to aasanalgo symbol format if exchange is available
             if exchange:
                 oa_symbol = get_oa_symbol(symbol=symbol, exchange=exchange)
                 if oa_symbol:
@@ -489,7 +489,7 @@ def transform_positions_data(positions_data):
 
 def transform_holdings_data(holdings_data):
     """
-    Transform holdings data from Pocketful API format to OpenAlgo standard format.
+    Transform holdings data from Pocketful API format to aasanalgo standard format.
     Handles responses from both /api/v1/holdings and /api/v1/portfolio/demat-holdings endpoints.
     Can be called twice in the pipeline, so it detects if data is already transformed.
     
@@ -552,24 +552,24 @@ def transform_holdings_data(holdings_data):
         # Get exchange with fallbacks
         exchange = holding.get('exchange', 'NSE')  # Default to NSE if not specified
         
-        # Convert to OpenAlgo symbol format if needed
+        # Convert to aasanalgo symbol format if needed
         if tradingsymbol and exchange:
             # Clean up the symbol if it has -EQ suffix
             if tradingsymbol.endswith('-EQ'):
                 tradingsymbol = tradingsymbol.replace('-EQ', '')
                 print(f"DEBUG - Removed -EQ suffix, symbol is now: {tradingsymbol}")
             
-            # Try to convert to OpenAlgo symbol format
+            # Try to convert to aasanalgo symbol format
             try:
-                print(f"DEBUG - Converting symbol '{tradingsymbol}' for exchange '{exchange}' to OpenAlgo format")
+                print(f"DEBUG - Converting symbol '{tradingsymbol}' for exchange '{exchange}' to aasanalgo format")
                 oa_symbol = get_oa_symbol(symbol=tradingsymbol, exchange=exchange)
                 if oa_symbol:
                     tradingsymbol = oa_symbol
-                    print(f"DEBUG - Converted to OpenAlgo symbol: {tradingsymbol}")
+                    print(f"DEBUG - Converted to aasanalgo symbol: {tradingsymbol}")
                 else:
-                    print(f"DEBUG - Could not convert to OpenAlgo symbol, using original: {tradingsymbol}")
+                    print(f"DEBUG - Could not convert to aasanalgo symbol, using original: {tradingsymbol}")
             except Exception as e:
-                print(f"DEBUG - Error converting symbol to OpenAlgo format: {str(e)}")
+                print(f"DEBUG - Error converting symbol to aasanalgo format: {str(e)}")
                 # If conversion fails, still use the cleaned symbol
                 print(f"DEBUG - Using original symbol: {tradingsymbol}")
         

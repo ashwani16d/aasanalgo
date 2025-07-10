@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-OpenAlgo – New Broker Integration Test
+aasanalgo – New Broker Integration Test
 • Stage‑by‑stage progress output
 • Immediate reporting of any failing symbol / order‑id
 • Final green / red roll‑up
@@ -17,10 +17,10 @@ colorama_init(autoreset=True)
 
 # ───────────────── CONFIG ─────────────────
 API_KEY = os.getenv(
-    "OPENALGO_API_KEY",
+    "aasanalgo_API_KEY",
     "499128a9359e97ce3e4d2bfb6a32f41be45e504e8cdbb7f35fee23795c9a7b9d"
 )
-HOST = os.getenv("OPENALGO_HOST", "http://127.0.0.1:5000")
+HOST = os.getenv("aasanalgo_HOST", "http://127.0.0.1:5000")
 
 NSE_INDICES = ["NIFTY","BANKNIFTY","FINNIFTY","NIFTYNXT50","MIDCPNIFTY","INDIAVIX"]
 BSE_INDICES = ["SENSEX","BANKEX","SENSEX50"]
@@ -236,9 +236,9 @@ class Tester:
 
 # ─────────────────── main ───────────────────
 if __name__=="__main__":
-    try: from openalgo import api as OAClient
+    try: from aasanalgo import api as OAClient
     except ImportError:
-        print(red("openalgo SDK missing – pip install openalgo")); sys.exit(1)
+        print(red("aasanalgo SDK missing – pip install aasanalgo")); sys.exit(1)
 
     client=OAClient(api_key=API_KEY,host=HOST)
     success=Tester(client).run()

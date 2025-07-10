@@ -98,7 +98,7 @@ def get_symbol_info(
     Args:
         symbol: Symbol to look up
         exchange: Exchange to look up the symbol in
-        api_key: OpenAlgo API key (for API-based calls)
+        api_key: aasanalgo API key (for API-based calls)
         auth_token: Direct broker authentication token (for internal calls)
         broker: Direct broker name (for internal calls)
         
@@ -114,7 +114,7 @@ def get_symbol_info(
         if AUTH_TOKEN is None:
             error_response = {
                 'status': 'error',
-                'message': 'Invalid openalgo apikey'
+                'message': 'Invalid aasanalgo apikey'
             }
             return False, error_response, 403
         

@@ -98,7 +98,7 @@ import logging
 
 def get_open_positionss(tradingsymbol, exchange, product, auth):
     print("##### DEBUG: ENTERING get_open_position FUNCTION #####")
-    # Convert Trading Symbol from OpenAlgo Format to Broker Format (Token ID)
+    # Convert Trading Symbol from aasanalgo Format to Broker Format (Token ID)
     print(f"##### DEBUG: Calling get_token with symbol: {tradingsymbol}, exchange: {exchange} #####")
     target_security_id = get_token(tradingsymbol, exchange)
     if target_security_id.isdigit():
@@ -182,9 +182,9 @@ def get_open_positionss(tradingsymbol, exchange, product, auth):
     return net_qty
 
 def get_open_position(tradingsymbol, exchange, producttype,auth):
-    #Convert Trading Symbol from OpenAlgo Format to Broker Format Before Search in OpenPosition
+    #Convert Trading Symbol from aasanalgo Format to Broker Format Before Search in OpenPosition
     print("##### DEBUG: ENTERING get_open_position FUNCTION #####")
-    # Convert Trading Symbol from OpenAlgo Format to Broker Format (Token ID)
+    # Convert Trading Symbol from aasanalgo Format to Broker Format (Token ID)
     print(f"##### DEBUG: Calling get_token with symbol: {tradingsymbol}, exchange: {exchange} #####")
     target_security_id = get_token(tradingsymbol, exchange)
     

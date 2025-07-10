@@ -15,7 +15,7 @@ def get_margin_data(auth_token):
         auth_token (str): The authentication token
         
     Returns:
-        dict: Processed margin data in OpenAlgo format
+        dict: Processed margin data in aasanalgo format
     """
     try:
         # Get API key from environment
@@ -58,7 +58,7 @@ def get_margin_data(auth_token):
         # Extract margin details
         margin = data['d']
         
-        # Map Tradejini response to OpenAlgo format
+        # Map Tradejini response to aasanalgo format
         processed_margin_data = {
             "availablecash": "{:.2f}".format(float(margin.get('availMargin', 0))),
             "collateral": "{:.2f}".format(float(margin.get('stockCollateral', 0))),

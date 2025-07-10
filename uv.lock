@@ -909,20 +909,20 @@ wheels = [
 ]
 
 [[package]]
-name = "openalgo"
+name = "aasanalgo"
 version = "1.0.12"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
     { name = "pandas" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/1e/d9/f23989a302404040bd6516f9a27a39455849c246aa631ed5572ab2c072f5/openalgo-1.0.12.tar.gz", hash = "sha256:dbf51a05b0ff280942bf26870517f7293cf610ffee46a979ce6b8162b20f43f2", size = 12854 }
+sdist = { url = "https://files.pythonhosted.org/packages/1e/d9/f23989a302404040bd6516f9a27a39455849c246aa631ed5572ab2c072f5/aasanalgo-1.0.12.tar.gz", hash = "sha256:dbf51a05b0ff280942bf26870517f7293cf610ffee46a979ce6b8162b20f43f2", size = 12854 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/b4/31/9c98a30b6e661f03fa0f4a85997d031947d048e1abe0cc4dfaec1e1972b5/openalgo-1.0.12-py3-none-any.whl", hash = "sha256:a554aa7e2b78adae7a1d6b85d9924fb325bc9ea9c742a1ea45d39bb62b1292c9", size = 12574 },
+    { url = "https://files.pythonhosted.org/packages/b4/31/9c98a30b6e661f03fa0f4a85997d031947d048e1abe0cc4dfaec1e1972b5/aasanalgo-1.0.12-py3-none-any.whl", hash = "sha256:a554aa7e2b78adae7a1d6b85d9924fb325bc9ea9c742a1ea45d39bb62b1292c9", size = 12574 },
 ]
 
 [[package]]
-name = "openalgoui"
+name = "aasanalgoui"
 version = "1.0.0.24"
 source = { editable = "." }
 dependencies = [
@@ -988,7 +988,7 @@ dependencies = [
     { name = "mdurl" },
     { name = "nest-asyncio" },
     { name = "numpy" },
-    { name = "openalgo" },
+    { name = "aasanalgo" },
     { name = "ordered-set" },
     { name = "packaging" },
     { name = "pandas" },
@@ -1102,7 +1102,7 @@ requires-dist = [
     { name = "mdurl", specifier = "==0.1.2" },
     { name = "nest-asyncio", specifier = "==1.6.0" },
     { name = "numpy", specifier = "==2.2.4" },
-    { name = "openalgo", specifier = "==1.0.12" },
+    { name = "aasanalgo", specifier = "==1.0.12" },
     { name = "ordered-set", specifier = "==4.1.0" },
     { name = "packaging", specifier = "==24.1" },
     { name = "pandas", specifier = "==2.2.3" },

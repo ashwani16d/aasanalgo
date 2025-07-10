@@ -353,7 +353,7 @@ def split_order(
     
     Args:
         split_data: Split order data
-        api_key: OpenAlgo API key (for API-based calls)
+        api_key: aasanalgo API key (for API-based calls)
         auth_token: Direct broker authentication token (for internal calls)
         broker: Direct broker name (for internal calls)
         
@@ -376,7 +376,7 @@ def split_order(
         if AUTH_TOKEN is None:
             error_response = {
                 'status': 'error',
-                'message': 'Invalid openalgo apikey'
+                'message': 'Invalid aasanalgo apikey'
             }
             if not get_analyze_mode():
                 log_executor.submit(async_log_order, 'splitorder', original_data, error_response)

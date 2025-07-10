@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Welcome, {{ admin_username }}</h1>
+    <p>Users Count: {{ stats.user_count }}</p>
+    <p>API Keys Count: {{ stats.api_key_count }}</p>
+    <a href="/admin/logout">Logout</a>
+</body>
+</html>

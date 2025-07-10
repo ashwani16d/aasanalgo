@@ -1,4 +1,4 @@
-# database/user_db.py
+
 
 import os
 from sqlalchemy import create_engine, Column, Integer, String, Boolean
@@ -57,7 +57,7 @@ class User(Base):
         """Get the TOTP URI for QR code generation"""
         return pyotp.totp.TOTP(self.totp_secret).provisioning_uri(
             name=self.email,
-            issuer_name="OpenAlgo"
+            issuer_name="aasanalgo"
         )
     
     def verify_totp(self, token):

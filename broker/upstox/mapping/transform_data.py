@@ -1,4 +1,4 @@
-#Mapping OpenAlgo API Request https://openalgo.in/docs
+#Mapping aasanalgo API Request https://aasanalgo.in/docs
 #Mapping Upstox Broking Parameters https://upstox.com/developer/api-documentation/orders
 
 def transform_data(data,token):
@@ -66,9 +66,9 @@ def map_product_type(product):
 
 def reverse_map_product_type(exchange,product):
     """
-    Reverse maps the broker product type to the OpenAlgo product type, considering the exchange.
+    Reverse maps the broker product type to the aasanalgo product type, considering the exchange.
     """
-    # Exchange to OpenAlgo product type mapping for 'D'
+    # Exchange to aasanalgo product type mapping for 'D'
     exchange_mapping_for_d = {
         "NSE": "CNC",
         "BSE": "CNC",

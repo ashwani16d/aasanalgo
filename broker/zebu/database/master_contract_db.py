@@ -115,7 +115,7 @@ def download_and_unzip_zebu_data(output_path):
 
 def process_zebu_nse_data(output_path):
     """
-    Processes the Zebu NSE data (NSE_symbols.txt) to generate OpenAlgo symbols.
+    Processes the Zebu NSE data (NSE_symbols.txt) to generate aasanalgo symbols.
     Separates EQ, BE symbols, and Index symbols.
     """
     print("Processing Zebu NSE Data")
@@ -130,19 +130,19 @@ def process_zebu_nse_data(output_path):
     # Add missing columns to ensure DataFrame matches the database structure
     df['symbol'] = df['brsymbol']  # Initialize 'symbol' with 'brsymbol'
 
-    # Apply transformation for OpenAlgo symbols
-    def get_openalgo_symbol(broker_symbol):
+    # Apply transformation for aasanalgo symbols
+    def get_aasanalgo_symbol(broker_symbol):
         # Separate by hyphen and apply logic for EQ and BE
         if '-EQ' in broker_symbol:
             return broker_symbol.replace('-EQ', '')
         elif '-BE' in broker_symbol:
             return broker_symbol.replace('-BE', '')
         else:
-            # For other symbols (including index), OpenAlgo symbol remains the same as broker symbol
+            # For other symbols (including index), aasanalgo symbol remains the same as broker symbol
             return broker_symbol
 
     # Update the 'symbol' column
-    df['symbol'] = df['brsymbol'].apply(get_openalgo_symbol)
+    df['symbol'] = df['brsymbol'].apply(get_aasanalgo_symbol)
 
     # Define Exchange: 'NSE' for EQ and BE, 'NSE_INDEX' for indexes
     df['exchange'] = df.apply(lambda row: 'NSE_INDEX' if row['instrumenttype'] == 'INDEX' else 'NSE', axis=1)
@@ -170,7 +170,7 @@ def process_zebu_nse_data(output_path):
 
 def process_zebu_nfo_data(output_path):
     """
-    Processes the Zebu NFO data (NFO_symbols.txt) to generate OpenAlgo symbols.
+    Processes the Zebu NFO data (NFO_symbols.txt) to generate aasanalgo symbols.
     Handles both futures and options formatting.
     """
     print("Processing Zebu NFO Data")
@@ -237,7 +237,7 @@ def process_zebu_nfo_data(output_path):
 
 def process_zebu_cds_data(output_path):
     """
-    Processes the Zebu CDS data (CDS_symbols.txt) to generate OpenAlgo symbols.
+    Processes the Zebu CDS data (CDS_symbols.txt) to generate aasanalgo symbols.
     Handles both futures and options formatting.
     """
     print("Processing Zebu CDS Data")
@@ -305,7 +305,7 @@ def process_zebu_cds_data(output_path):
 
 def process_zebu_mcx_data(output_path):
     """
-    Processes the Zebu MCX data (MCX_symbols.txt) to generate OpenAlgo symbols.
+    Processes the Zebu MCX data (MCX_symbols.txt) to generate aasanalgo symbols.
     Handles both futures and options formatting.
     """
     print("Processing Zebu MCX Data")
@@ -373,7 +373,7 @@ def process_zebu_mcx_data(output_path):
 
 def process_zebu_bse_data(output_path):
     """
-    Processes the Zebu BSE data (BSE_symbols.txt) to generate OpenAlgo symbols.
+    Processes the Zebu BSE data (BSE_symbols.txt) to generate aasanalgo symbols.
     Ensures that the instrument type is always 'EQ'.
     """
     print("Processing Zebu BSE Data")
@@ -392,12 +392,12 @@ def process_zebu_bse_data(output_path):
     # Add missing columns to ensure DataFrame matches the database structure
     df['symbol'] = df['brsymbol']  # Initialize 'symbol' with 'brsymbol'
 
-    # Apply transformation for OpenAlgo symbols (no special logic needed here)
-    def get_openalgo_symbol(broker_symbol):
+    # Apply transformation for aasanalgo symbols (no special logic needed here)
+    def get_aasanalgo_symbol(broker_symbol):
         return broker_symbol
 
     # Update the 'symbol' column
-    df['symbol'] = df['brsymbol'].apply(get_openalgo_symbol)
+    df['symbol'] = df['brsymbol'].apply(get_aasanalgo_symbol)
 
     # Set Exchange: 'BSE' for all rows
     df['exchange'] = 'BSE'
@@ -423,7 +423,7 @@ def process_zebu_bse_data(output_path):
 
 def process_zebu_bfo_data(output_path):
     """
-    Processes the Zebu BFO data (BFO_symbols.txt) to generate OpenAlgo symbols and correctly extract the name column.
+    Processes the Zebu BFO data (BFO_symbols.txt) to generate aasanalgo symbols and correctly extract the name column.
     Handles both futures and options formatting, ensuring strike prices are handled as either float or integer.
     """
     print("Processing Zebu BFO Data")

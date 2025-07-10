@@ -143,7 +143,7 @@ class BrokerData:
         logger.info(f"Original symbol_list: {symbol_list}")
         
         # Special case for Bruno API format with single symbol
-        # Special case for OpenAlgo standard format: direct quote request via Bruno
+        # Special case for aasanalgo standard format: direct quote request via Bruno
         if isinstance(symbol_list, dict):
             try:
                 # Extract symbol and exchange
@@ -220,7 +220,7 @@ class BrokerData:
                             quote = websocket.get_quote(exchange, token)
                             
                             if quote:
-                                # Format the response according to OpenAlgo standard format
+                                # Format the response according to aasanalgo standard format
                                 quote_item = {
                                     'symbol': symbol,
                                     'exchange': exchange,
@@ -289,7 +289,7 @@ class BrokerData:
                 else:
                     logger.error(f"Could not find token for {symbol} on {exchange}")
         
-        # Return OpenAlgo standard format
+        # Return aasanalgo standard format
         # If there's no data, return empty response with success status
         if not quote_data:
             return {
@@ -302,7 +302,7 @@ class BrokerData:
             # Extract the first and only quote
             quote = quote_data[0]
             
-            # Return in the expected OpenAlgo standard format
+            # Return in the expected aasanalgo standard format
             return {
                 "status": "success",
                 "data": {
@@ -645,7 +645,7 @@ class BrokerData:
             timeout (int): Timeout in seconds
             
         Returns:
-            Dict with market depth data in the OpenAlgo standard format
+            Dict with market depth data in the aasanalgo standard format
         """
         return self.get_market_depth(symbol_list, timeout)
         
@@ -658,7 +658,7 @@ class BrokerData:
             timeout (int): Timeout in seconds
             
         Returns:
-            Dict with market depth data in the OpenAlgo standard format
+            Dict with market depth data in the aasanalgo standard format
         """
         logger.info(f"Getting market depth for: {symbol_list}")
         
@@ -748,7 +748,7 @@ class BrokerData:
                         depth = websocket.get_market_depth(exchange, token)
                         
                         if depth:
-                            # Create a normalized depth structure in the OpenAlgo format
+                            # Create a normalized depth structure in the aasanalgo format
                             item = {
                                 'symbol': symbol,
                                 'exchange': exchange,
@@ -804,7 +804,7 @@ class BrokerData:
             # Extract the first and only depth item
             depth_item = depth_data[0]
             
-            # Return in the expected OpenAlgo standard format
+            # Return in the expected aasanalgo standard format
             return {
                 "status": "success",
                 "data": {

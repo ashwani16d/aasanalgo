@@ -1,4 +1,4 @@
-#Mapping OpenAlgo API Request https://openalgo.in/docs
+#Mapping aasanalgo API Request https://aasanalgo.in/docs
 #Mapping Angel Broking Parameters https://smartapi.angelbroking.com/docs/Orders
 
 from database.token_db import get_br_symbol
@@ -22,7 +22,7 @@ def transform_data(data,token):
         "DisQty": int(data.get("disclosed_quantity", "0")),
         "IsIntraday": True if data.get("product") == "MIS" else False,
         "AHPlaced": "N",  # AMO Order by default NO
-        "RemoteOrderID": "OpenAlgo" 
+        "RemoteOrderID": "aasanalgo" 
         #"AppSource": "7044"
     }
 

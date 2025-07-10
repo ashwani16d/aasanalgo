@@ -120,7 +120,7 @@ def get_history(
         interval: Time interval (e.g., 1m, 5m, 15m, 1h, 1d)
         start_date: Start date in YYYY-MM-DD format
         end_date: End date in YYYY-MM-DD format
-        api_key: OpenAlgo API key (for API-based calls)
+        api_key: aasanalgo API key (for API-based calls)
         auth_token: Direct broker authentication token (for internal calls)
         feed_token: Direct broker feed token (for internal calls)
         broker: Direct broker name (for internal calls)
@@ -137,7 +137,7 @@ def get_history(
         if AUTH_TOKEN is None:
             return False, {
                 'status': 'error',
-                'message': 'Invalid openalgo apikey'
+                'message': 'Invalid aasanalgo apikey'
             }, 403
         return get_history_with_auth(
             AUTH_TOKEN, 

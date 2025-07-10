@@ -104,13 +104,13 @@ def calculate_order_statistics(order_data):
 
 def transform_order_data(orders):
     """
-    Processes and modifies a list of order dictionaries into the final OpenAlgo format.
+    Processes and modifies a list of order dictionaries into the final aasanalgo format.
     
     Parameters:
     - orders: List of orders with modified fields
     
     Returns:
-    - Dictionary with orders in OpenAlgo format
+    - Dictionary with orders in aasanalgo format
     """
     #print(f"[DEBUG] transform_order_data - Input orders: {orders}")
     
@@ -122,7 +122,7 @@ def transform_order_data(orders):
     transformed_orders = []
     
     for order in orders:
-        # Convert to OpenAlgo format if needed
+        # Convert to aasanalgo format if needed
         transformed_order = {
             "action": order.get('action', ''),
             "exchange": order.get('exchange', ''),
@@ -162,7 +162,7 @@ def map_trade_data(trade_data):
         # If it's already a list of trades, just return it
         return trade_data
         
-    # Handle OpenAlgo format with status and data fields
+    # Handle aasanalgo format with status and data fields
     if isinstance(trade_data, dict) and 'status' in trade_data and trade_data.get('status') == 'success':
         if 'data' in trade_data and isinstance(trade_data['data'], list):
             return trade_data['data']
@@ -216,7 +216,7 @@ def map_trade_data(trade_data):
                 "trade_value": trade.get('fillValue', 0.0),
                 "orderid": trade.get('orderId', ''),
                 "timestamp": trade.get('time', ''),
-                "sym_id": symbol.get('id', '') # Store symbol ID for OpenAlgo lookup
+                "sym_id": symbol.get('id', '') # Store symbol ID for aasanalgo lookup
             }
             
             # Add optional fields if present
@@ -233,19 +233,19 @@ def map_trade_data(trade_data):
 
 def transform_tradebook_data(trades):
     """
-    Transforms mapped trade data to OpenAlgo format.
+    Transforms mapped trade data to aasanalgo format.
     
     Args:
         trades: List of mapped trade dictionaries or raw API response
         
     Returns:
-        dict: Trade book data in OpenAlgo format with {'data': [...], 'status': 'success'}
+        dict: Trade book data in aasanalgo format with {'data': [...], 'status': 'success'}
     """
     logger.debug(f"transform_tradebook_data - Input trades type: {type(trades)}")
     
-    # Check if already in OpenAlgo format
+    # Check if already in aasanalgo format
     if isinstance(trades, dict) and 'status' in trades and 'data' in trades:
-        logger.debug("transform_tradebook_data - Already in OpenAlgo format")
+        logger.debug("transform_tradebook_data - Already in aasanalgo format")
         # Extract just the data array without the wrapper
         return trades['data']
     
@@ -300,15 +300,15 @@ def transform_tradebook_data(trades):
             exchange = trade.get('exchange', '')
             trading_symbol = trade.get('symbol', '')
         
-        # Get OpenAlgo symbol if possible
+        # Get aasanalgo symbol if possible
         try:
-            openalgo_symbol = get_oa_symbol(
+            aasanalgo_symbol = get_oa_symbol(
                 symbol=sym_id, 
                 exchange=exchange
             )
         except Exception as e:
             logger.warning(f"Symbol lookup failed: {str(e)}")
-            openalgo_symbol = None
+            aasanalgo_symbol = None
             
         # Map product type if needed
         if 'product' in trade:
@@ -339,7 +339,7 @@ def transform_tradebook_data(trades):
         else:
             action = ''  # Can't determine
             
-        # Create transformed trade - match OpenAlgo format exactly
+        # Create transformed trade - match aasanalgo format exactly
         transformed_trade = {
             "action": action,
             "average_price": float(trade.get('fillPrice', trade.get('average_price', 0.0))),
@@ -416,42 +416,42 @@ def map_position_data(position_data):
             # Log position data for debugging
             logger.info(f"Position data: symId={symbol_id}, tradingsymbol={tradingsymbol}, exchange={exchange}")
             
-            # Get OpenAlgo symbol - follow same approach as the main implementation
-            openalgo_symbol = None
+            # Get aasanalgo symbol - follow same approach as the main implementation
+            aasanalgo_symbol = None
             try:
                 # First try with the symbol ID from sym object
                 symid_from_object = sym.get('id', '') if sym else ''
                 if symid_from_object:
-                    openalgo_symbol = get_oa_symbol(symid_from_object, exchange)
-                    logger.info(f"Symbol lookup with sym.id: {symid_from_object} -> {openalgo_symbol}")
+                    aasanalgo_symbol = get_oa_symbol(symid_from_object, exchange)
+                    logger.info(f"Symbol lookup with sym.id: {symid_from_object} -> {aasanalgo_symbol}")
                 
                 # If not found and we have the position symId, try that
-                if not openalgo_symbol and symbol_id:
-                    openalgo_symbol = get_oa_symbol(symbol_id, '')
-                    logger.info(f"Symbol lookup with position.symId: {symbol_id} -> {openalgo_symbol}")
+                if not aasanalgo_symbol and symbol_id:
+                    aasanalgo_symbol = get_oa_symbol(symbol_id, '')
+                    logger.info(f"Symbol lookup with position.symId: {symbol_id} -> {aasanalgo_symbol}")
                     
                 # If still not found, try with exchange symbol
-                if not openalgo_symbol:
-                    openalgo_symbol = get_oa_symbol(exchange_symbol, exchange)
-                    logger.info(f"Symbol lookup with exchange symbol: {exchange_symbol} -> {openalgo_symbol}")
+                if not aasanalgo_symbol:
+                    aasanalgo_symbol = get_oa_symbol(exchange_symbol, exchange)
+                    logger.info(f"Symbol lookup with exchange symbol: {exchange_symbol} -> {aasanalgo_symbol}")
                     
             except Exception as e:
                 logger.warning(f"Symbol lookup failed: {str(e)}")
-                openalgo_symbol = None
+                aasanalgo_symbol = None
             
             # Determine the final symbol to use
             final_symbol = ""
-            if openalgo_symbol:
-                final_symbol = openalgo_symbol
-                logger.info(f"Using OpenAlgo symbol: {final_symbol}")
+            if aasanalgo_symbol:
+                final_symbol = aasanalgo_symbol
+                logger.info(f"Using aasanalgo symbol: {final_symbol}")
             else:
-                # Fallback to exchange symbol if OpenAlgo symbol isn't available
+                # Fallback to exchange symbol if aasanalgo symbol isn't available
                 final_symbol = exchange_symbol
                 logger.info(f"Fallback to exchange symbol: {final_symbol}")
             
             # Create mapped position - without tradingsymbol field as requested
             mapped_position = {
-                'symbol': final_symbol,  # Use final symbol (OpenAlgo or fallback)
+                'symbol': final_symbol,  # Use final symbol (aasanalgo or fallback)
                 'exchange': exchange,
                 'product': product,
                 'quantity': int(position.get('netQty', 0)),
@@ -471,7 +471,7 @@ def map_position_data(position_data):
 
 def transform_positions_data(positions_data):
     """
-    Transform mapped position data to OpenAlgo format.
+    Transform mapped position data to aasanalgo format.
     DEPRECATED: This function is kept for backward compatibility only.
     Position transformation is now done directly in get_positions function.
     """
@@ -629,13 +629,13 @@ def calculate_portfolio_statistics(holdings_data):
 
 def transform_holdings_data(holdings_data):
     """
-    Transforms Tradejini holdings data to OpenAlgo format.
+    Transforms Tradejini holdings data to aasanalgo format.
     
     Args:
         holdings_data (list): List of holdings dictionaries from TradeJini API
         
     Returns:
-        dict: Holdings data in OpenAlgo format
+        dict: Holdings data in aasanalgo format
         {
             "data": {
                 "holdings": [

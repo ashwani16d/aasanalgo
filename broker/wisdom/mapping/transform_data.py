@@ -1,4 +1,4 @@
-#Mapping OpenAlgo API Request https://openalgo.in/docs
+#Mapping aasanalgo API Request https://aasanalgo.in/docs
 #Mapping Wisdom Capital Broking Parameters https://symphonyfintech.com/xts-trading-front-end-api/
 
 from database.token_db import get_br_symbol,get_token
@@ -22,7 +22,7 @@ def transform_data(data,token):
         "orderQuantity": data["quantity"],
         "limitPrice": data.get("price", "0"),
         "stopPrice": data.get("trigger_price", "0"),
-        "orderUniqueIdentifier": "openalgo"
+        "orderUniqueIdentifier": "aasanalgo"
     }
     print(f"transformed data: {transformed}")
     return transformed
@@ -38,7 +38,7 @@ def transform_modify_order_data(data, token):
         "modifiedLimitPrice": data["price"],
         "modifiedStopPrice": data.get("trigger_price", "0"),
         "modifiedTimeInForce": "DAY",
-        "orderUniqueIdentifier": "openalgo"
+        "orderUniqueIdentifier": "aasanalgo"
     }
 
 def map_exchange(exchange):
@@ -83,9 +83,9 @@ def map_product_type(product):
 
 def reverse_map_product_type(exchange,product):
     """
-    Reverse maps the broker product type to the OpenAlgo product type, considering the exchange.
+    Reverse maps the broker product type to the aasanalgo product type, considering the exchange.
     """
-    # Exchange to OpenAlgo product type mapping for 'D'
+    # Exchange to aasanalgo product type mapping for 'D'
     exchange_mapping = {
         "CNC": "CNC",
         "NRML": "NRML",

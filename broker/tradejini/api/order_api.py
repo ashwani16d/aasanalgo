@@ -116,7 +116,7 @@ def get_order_book(auth):
         auth (str): Authentication token
         
     Returns:
-        dict: Order book data in OpenAlgo format
+        dict: Order book data in aasanalgo format
     """
     try:
         # Get API key from environment
@@ -150,28 +150,28 @@ def get_order_book(auth):
         
         response.raise_for_status()
         
-        # Transform response data to OpenAlgo format
+        # Transform response data to aasanalgo format
         response_data = response.json()
         logger.debug(f"get_order_book - Raw response data: {response_data}")
         
         if response_data['s'] == 'ok':
             #print(f"[DEBUG] get_order_book - Found {len(response_data['d'])} orders")
-            # Transform each order to OpenAlgo format
+            # Transform each order to aasanalgo format
             transformed_orders = []
             for order in response_data['d']:
                 #print(f"[DEBUG] get_order_book - Processing order: {order}")
                 try:
-                    # Get OpenAlgo symbol using symbol and exchange
-                    openalgo_symbol = get_oa_symbol(
+                    # Get aasanalgo symbol using symbol and exchange
+                    aasanalgo_symbol = get_oa_symbol(
                         symbol=order['sym']['id'],
                         exchange=order['sym']['exch']
                     )
-                    #print(f"[DEBUG] get_order_book - OpenAlgo symbol lookup for symbol {order['sym']['sym']}: {openalgo_symbol}")
+                    #print(f"[DEBUG] get_order_book - aasanalgo symbol lookup for symbol {order['sym']['sym']}: {aasanalgo_symbol}")
                     
                     transformed_order = {
-                        'stat': 'Ok',  # OpenAlgo expects 'stat' field
+                        'stat': 'Ok',  # aasanalgo expects 'stat' field
                         'data': {
-                            'tradingsymbol': openalgo_symbol if openalgo_symbol else order['sym']['sym'],  # Fallback to Tradejini symbol if OpenAlgo not found
+                            'tradingsymbol': aasanalgo_symbol if aasanalgo_symbol else order['sym']['sym'],  # Fallback to Tradejini symbol if aasanalgo not found
                             'exchange': order['sym']['exch'],
                             'token': order['symId'],
                             'exch': order['sym']['exch'],
@@ -224,7 +224,7 @@ def get_trade_book(auth):
         auth (str): Authentication token
         
     Returns:
-        dict: Trade book data in OpenAlgo format {'data': [...], 'status': 'success'}
+        dict: Trade book data in aasanalgo format {'data': [...], 'status': 'success'}
     """
     try:
         # Get API key from environment
@@ -280,17 +280,17 @@ def get_trade_book(auth):
         trades_data = response_data.get('d', [])
         logger.info(f"get_trade_book - Found {len(trades_data)} trades")
         
-        # Transform trades directly to OpenAlgo format
+        # Transform trades directly to aasanalgo format
         transformed_trades = []
         for trade in trades_data:
             try:
                 # Get symbol details
                 symbol = trade.get('sym', {})
                 
-                # Get OpenAlgo symbol
-                openalgo_symbol = None
+                # Get aasanalgo symbol
+                aasanalgo_symbol = None
                 try:
-                    openalgo_symbol = get_oa_symbol(
+                    aasanalgo_symbol = get_oa_symbol(
                         symbol=symbol.get('id', ''),
                         exchange=symbol.get('exch', '')
                     )
@@ -314,13 +314,13 @@ def get_trade_book(auth):
                 side = trade.get('side', '').lower()
                 action = 'BUY' if side == 'buy' else 'SELL'
                 
-                # Create transformed trade - match OpenAlgo format exactly
-                # Determine the symbol to use (OpenAlgo symbol if available)
+                # Create transformed trade - match aasanalgo format exactly
+                # Determine the symbol to use (aasanalgo symbol if available)
                 final_symbol = ""  
-                if openalgo_symbol:
-                    final_symbol = openalgo_symbol
+                if aasanalgo_symbol:
+                    final_symbol = aasanalgo_symbol
                 else:
-                    # Fallback to exchange symbol if OpenAlgo symbol isn't available
+                    # Fallback to exchange symbol if aasanalgo symbol isn't available
                     final_symbol = symbol.get('sym', symbol.get('trdSym', ''))
                     
                 transformed_trade = {
@@ -330,7 +330,7 @@ def get_trade_book(auth):
                     "orderid": str(trade.get('orderId', '')),
                     "product": product,
                     "quantity": int(trade.get('fillQty', 0)),
-                    "symbol": final_symbol,  # Using OpenAlgo symbol here
+                    "symbol": final_symbol,  # Using aasanalgo symbol here
                     "timestamp": trade.get('time', ''),
                     "trade_value": float(trade.get('fillValue', 0.0))
                 }
@@ -365,7 +365,7 @@ def get_positions(auth):
         auth (str): Authentication token
         
     Returns:
-        dict: Positions data in OpenAlgo format
+        dict: Positions data in aasanalgo format
     """
     try:
         # Get API key from environment
@@ -421,36 +421,36 @@ def get_positions(auth):
                     # Log position data for debugging
                     logger.info(f"Position data: symId={symbol_id}, tradingsymbol={tradingsymbol}, exchange={exchange}")
                     
-                    # Get OpenAlgo symbol - follow same approach as TradeBook implementation
-                    openalgo_symbol = None
+                    # Get aasanalgo symbol - follow same approach as TradeBook implementation
+                    aasanalgo_symbol = None
                     try:
                         # First try with the symbol ID from sym object
                         symid_from_object = sym.get('id', '')
                         if symid_from_object:
-                            openalgo_symbol = get_oa_symbol(symid_from_object, exchange)
-                            logger.info(f"Symbol lookup with sym.id: {symid_from_object} -> {openalgo_symbol}")
+                            aasanalgo_symbol = get_oa_symbol(symid_from_object, exchange)
+                            logger.info(f"Symbol lookup with sym.id: {symid_from_object} -> {aasanalgo_symbol}")
                         
                         # If not found and we have the position symId, try that
-                        if not openalgo_symbol and symbol_id:
-                            openalgo_symbol = get_oa_symbol(symbol_id, '')
-                            logger.info(f"Symbol lookup with position.symId: {symbol_id} -> {openalgo_symbol}")
+                        if not aasanalgo_symbol and symbol_id:
+                            aasanalgo_symbol = get_oa_symbol(symbol_id, '')
+                            logger.info(f"Symbol lookup with position.symId: {symbol_id} -> {aasanalgo_symbol}")
                             
                         # If still not found, try with exchange symbol
-                        if not openalgo_symbol:
-                            openalgo_symbol = get_oa_symbol(exchange_symbol, exchange)
-                            logger.info(f"Symbol lookup with exchange symbol: {exchange_symbol} -> {openalgo_symbol}")
+                        if not aasanalgo_symbol:
+                            aasanalgo_symbol = get_oa_symbol(exchange_symbol, exchange)
+                            logger.info(f"Symbol lookup with exchange symbol: {exchange_symbol} -> {aasanalgo_symbol}")
                             
                     except Exception as e:
                         logger.warning(f"Symbol lookup failed: {str(e)}")
-                        openalgo_symbol = None
+                        aasanalgo_symbol = None
                     
                     # Determine the final symbol to use
                     final_symbol = ""
-                    if openalgo_symbol:
-                        final_symbol = openalgo_symbol
-                        logger.info(f"Using OpenAlgo symbol: {final_symbol}")
+                    if aasanalgo_symbol:
+                        final_symbol = aasanalgo_symbol
+                        logger.info(f"Using aasanalgo symbol: {final_symbol}")
                     else:
-                        # Fallback to exchange symbol if OpenAlgo symbol isn't available
+                        # Fallback to exchange symbol if aasanalgo symbol isn't available
                         final_symbol = exchange_symbol
                         logger.info(f"Fallback to exchange symbol: {final_symbol}")
                     
@@ -465,17 +465,17 @@ def get_positions(auth):
                     else:
                         mapped_product = 'MIS'  # Default
                     
-                    # Format the position data according to OpenAlgo format
+                    # Format the position data according to aasanalgo format
                     # Removing tradingsymbol field as requested
                     transformed_position = {
-                        'symbol': final_symbol,  # Use final symbol (OpenAlgo or fallback)
+                        'symbol': final_symbol,  # Use final symbol (aasanalgo or fallback)
                         'exchange': exchange,
                         'product': mapped_product,
                         'quantity': net_qty,
                         'average_price': str(round(float(position.get('netAvgPrice', 0.0)), 2))
                     }
                     
-                    logger.debug(f"Position transformed: {tradingsymbol} → {openalgo_symbol}")
+                    logger.debug(f"Position transformed: {tradingsymbol} → {aasanalgo_symbol}")
                     
                     positions_list.append(transformed_position)
                     logger.debug(f"Transformed position: {transformed_position}")
@@ -484,7 +484,7 @@ def get_positions(auth):
                     logger.error(f"Error transforming position: {str(e)}", exc_info=True)
                     continue
             
-            # Return in OpenAlgo format - same pattern as orderbook and tradebook
+            # Return in aasanalgo format - same pattern as orderbook and tradebook
             return {
                 "status": "success",
                 "data": positions_list
@@ -528,7 +528,7 @@ def get_holdings(auth):
         auth (str): Authentication token
         
     Returns:
-        dict: Holdings data in OpenAlgo format
+        dict: Holdings data in aasanalgo format
         {
             "data": {
                 "holdings": [
@@ -719,9 +719,9 @@ def get_open_position(tradingsymbol, exchange, producttype, auth):
             logger.error(f"get_open_position - Invalid positions response: {positions_response}")
             return '0'
         
-        # Check if this is already in OpenAlgo format
+        # Check if this is already in aasanalgo format
         if positions_response.get('status') == 'success' and 'data' in positions_response:
-            logger.info("get_open_position - Processing OpenAlgo format positions")
+            logger.info("get_open_position - Processing aasanalgo format positions")
             positions = positions_response['data']
             
             for position in positions:
@@ -732,13 +732,13 @@ def get_open_position(tradingsymbol, exchange, producttype, auth):
                 pos_exch = str(position.get('exchange', '')).upper().strip()
                 pos_qty = int(float(position.get('quantity', 0)))
                 
-                logger.info(f"get_open_position - Checking OpenAlgo position: {pos_symbol} on {pos_exch}, qty: {pos_qty}")
+                logger.info(f"get_open_position - Checking aasanalgo position: {pos_symbol} on {pos_exch}, qty: {pos_qty}")
                 
                 if pos_exch == exchange and pos_symbol == tradingsymbol and pos_qty != 0:
-                    logger.info(f"get_open_position - Found matching OpenAlgo position: {pos_symbol} with quantity {pos_qty}")
+                    logger.info(f"get_open_position - Found matching aasanalgo position: {pos_symbol} with quantity {pos_qty}")
                     return str(pos_qty)
             
-            logger.info(f"get_open_position - No matching OpenAlgo position found for {tradingsymbol} on {exchange}")
+            logger.info(f"get_open_position - No matching aasanalgo position found for {tradingsymbol} on {exchange}")
             return '0'
         
         # Handle raw TradeJini format
@@ -1097,7 +1097,7 @@ def place_smartorder_api(data, auth):
             res, response, orderid = place_order_api(order_data, auth)
             logger.info(f"place_smartorder_api - place_order_api response - res: {res}, response: {response}, orderid: {orderid}")
             
-            # Format response to match OpenAlgo's expected format
+            # Format response to match aasanalgo's expected format
             if response and isinstance(response, dict) and response.get('status') == 'success' and orderid:
                 wrapped_response = {
                     "status": "success",
@@ -1137,7 +1137,7 @@ def close_all_positions(current_api_key, auth):
         auth (str): Authentication token
         
     Returns:
-        dict: Response with status and message in OpenAlgo format
+        dict: Response with status and message in aasanalgo format
               {
                   'status': 'success' or 'error',
                   'message': 'Descriptive message'
@@ -1221,7 +1221,7 @@ def close_all_positions(current_api_key, auth):
                 logger.error(f"close_all_positions - Error processing position {position}: {error_msg}")
                 failed_count += 1
         
-        # Prepare final response in OpenAlgo format
+        # Prepare final response in aasanalgo format
         if success_count > 0 or failed_count == 0:
             message = "All Open Positions SquaredOff" if success_count > 0 else "No positions to close"
             response_data = {
